@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <link rel="shortcut icon" href="/favicon.png" />
     <title>App</title>
 
@@ -10,21 +13,39 @@
     <script type="module" src="/scripts/index.js"></script>
   </head>
   <body>
-    <header>
+    <!-- Skip link untuk keyboard users -->
+    <a href="#main-content" class="skip-link">Lewati ke konten</a>
+
+    <header role="banner">
       <div class="main-header container">
         <a class="brand-name" href="#/">App</a>
 
-        <nav id="navigation-drawer" class="navigation-drawer">
+        <nav
+          id="navigation-drawer"
+          class="navigation-drawer"
+          role="navigation"
+        >
           <ul id="nav-list" class="nav-list">
             <li><a href="#/">Beranda</a></li>
             <li><a href="#/about">About</a></li>
           </ul>
         </nav>
 
-        <button id="drawer-button" class="drawer-button">☰</button>
+        <button
+          id="drawer-button"
+          class="drawer-button"
+          aria-label="Buka/Tutup navigasi"
+        >
+          ☰
+        </button>
       </div>
     </header>
 
-    <main id="main-content" class="main-content"></main>
+    <main
+      id="main-content"
+      class="main-content container"
+      role="main"
+      tabindex="-1"
+    ></main>
   </body>
 </html>
