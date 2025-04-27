@@ -4,35 +4,34 @@ import "leaflet/dist/leaflet.css";
 export default class AddStoryView {
   getTemplate() {
     return `
-        <section>
-      <h2>Tambah Story</h2>
-      <div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
-
-      <form id="add-story-form">
-        <div>
-          <label for="description">Deskripsi:</label>
-          <textarea id="description" name="description" rows="2" style="width: 100%;"></textarea>
-        </div>
-        <div>
-          <label for="lat">Latitude:</label>
-          <input type="text" id="lat" name="lat" readonly style="width: 150px;" />
-        </div>
-        <div>
-          <label for="lon">Longitude:</label>
-          <input type="text" id="lon" name="lon" readonly style="width: 150px;" />
-        </div>
-        <div>
-          <label for="photo">Foto:</label>
-          <input type="file" id="photo" name="photo" accept="image/*" />
-        </div>
-        <div id="camera-container">
+      <section>
+        <h2>Tambah Story</h2>
+        <div id="camera-container" style="margin-bottom:1rem;">
           <video id="camera-preview" autoplay style="width:100%;max-width:400px;"></video>
           <button type="button" id="capture-btn">Ambil Foto</button>
         </div>
-        <button type="submit">Kirim</button>
-      </form>
-    </section>
-      `;
+        <div id="map" style="height:400px;margin-bottom:1rem;"></div>
+        <form id="add-story-form">
+          <div>
+            <label for="description">Deskripsi:</label>
+            <textarea id="description" name="description" rows="2" style="width:100%;"></textarea>
+          </div>
+          <div>
+            <label for="lat">Latitude:</label>
+            <input id="lat" name="lat" type="text" />
+          </div>
+          <div>
+            <label for="lon">Longitude:</label>
+            <input id="lon" name="lon" type="text" />
+          </div>
+          <div>
+            <label for="photo">Foto (jika tidak pakai kamera):</label>
+            <input id="photo" name="photo" type="file" accept="image/*" />
+          </div>
+          <button type="submit">Kirim</button>
+        </form>
+      </section>
+    `;
   }
 
   bindMapClick(handler) {
