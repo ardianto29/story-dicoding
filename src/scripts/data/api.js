@@ -41,9 +41,13 @@ export async function getAllStories(token, page = 1, size = 10, location = 0) {
   return res.json();
 }
 
-export async function getStoryDetail(token, storyId) {
-  const res = await fetch(ENDPOINT.STORY_DETAIL(storyId), {
-    headers: { 'Authorization': `Bearer ${token}` },
+export async function getStoryDetail(token, id) {
+  const res = await fetch(`${BASE_URL}/stories/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
   });
   return res.json();
 }
