@@ -6,19 +6,20 @@ export default class AddStoryPresenter {
     this.view = view;
   }
 
-  // Jadikan init() async agar bisa await camera setup
   async init() {
+    // 1) Map click & form submit binding
     this.view.bindMapClick(this._onMapClick.bind(this));
     this.view.bindSubmit(this._onSubmit.bind(this));
 
+    // 2) Camera setup & capture binding
     await this._initCamera();
     this.view.bindCapture(this._onCapture.bind(this));
   }
 
+  // Inisialisasi MediaStream ke <video>
   async _initCamera() {
     const video = document.getElementById("camera-preview");
     if (!video || !navigator.mediaDevices) return;
-
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
       video.srcObject = this.stream;
@@ -28,21 +29,26 @@ export default class AddStoryPresenter {
     }
   }
 
+  // Ambil foto dari video preview
   _onCapture() {
     const video = document.getElementById("camera-preview");
     const container = document.getElementById("camera-container");
+    if (!video) return;
 
+    // 1) Buat canvas dan gambar
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext("2d").drawImage(video, 0, 0);
 
+    // 2) Stop stream kamera
     this.stream?.getTracks().forEach((t) => t.stop());
 
+    // 3) Hide video, tampilkan canvas
     video.style.display = "none";
-
     container.appendChild(canvas);
 
+    // 4) Simpan blob untuk form submit
     canvas.toBlob(
       (blob) => {
         this.photoBlob = blob;
@@ -51,19 +57,15 @@ export default class AddStoryPresenter {
       "image/jpeg",
       0.9
     );
-
-    // Hentikan kamera
-    this.stream?.getTracks().forEach((track) => track.stop());
   }
 
-  // Handler klik di peta (sudah ada)
   _onMapClick({ lat, lon }) {
+    // isi handler map klik (sudah ada sebelumnya)
     console.log("Koordinat dipilih:", lat, lon);
   }
 
-  // Handler submit form
   async _onSubmit({ description, photo, lat, lon }) {
-    // jika user sudah capture, utamakan blob itu
+    // utamakan foto dari kamera jika ada
     const file = this.photoBlob || photo;
     if (!file) {
       return this.view.showMessage(
