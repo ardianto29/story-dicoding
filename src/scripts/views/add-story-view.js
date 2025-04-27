@@ -2,8 +2,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 export default class AddStoryView {
-    getTemplate() {
-      return `
+  getTemplate() {
+    return `
         <section>
       <h2>Tambah Story</h2>
       <div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
@@ -29,45 +29,44 @@ export default class AddStoryView {
       </form>
     </section>
       `;
-    }
-  
-    bindMapClick(handler) {
-      // Inisialisasi map (center di 0,0 dengan zoom rendah)
-      const map = L.map('map').setView([0, 0], 2);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-  
-      let marker;
-      map.on('click', e => {
-        if (marker) marker.remove();
-        marker = L.marker(e.latlng).addTo(map);
-        const { lat, lng } = e.latlng;
-        document.querySelector('[name=lat]').value = lat;
-        document.querySelector('[name=lon]').value = lng;
-        handler({ lat, lon: lng });
-      });
-    }
-  
-    bindSubmit(handler) {
-      const form = document.getElementById('add-story-form');
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        handler({
-          description: form.description.value,
-          photo: form.photo.files[0],
-          lat: form.lat.value ? Number(form.lat.value) : null,
-          lon: form.lon.value ? Number(form.lon.value) : null,
-        });
-      });
-    }
-  
-    showMessage(msg) {
-      alert(msg);
-    }
-  
-    redirectToHome() {
-      window.location.hash = '/';
-    }
   }
+
+  bindMapClick(handler) {
+    const map = L.map("map").setView([0, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    let marker;
+    map.on("click", (e) => {
+      if (marker) marker.remove();
+      marker = L.marker(e.latlng).addTo(map);
+      const { lat, lng } = e.latlng;
+      document.querySelector("[name=lat]").value = lat;
+      document.querySelector("[name=lon]").value = lng;
+      handler({ lat, lon: lng });
+    });
+  }
+
+  bindSubmit(handler) {
+    const form = document.getElementById("add-story-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handler({
+        description: form.description.value,
+        photo: form.photo.files[0],
+        lat: form.lat.value ? Number(form.lat.value) : null,
+        lon: form.lon.value ? Number(form.lon.value) : null
+      });
+    });
+  }
+
+  showMessage(msg) {
+    alert(msg);
+  }
+
+  redirectToHome() {
+    window.location.hash = "/";
+  }
+}
   
