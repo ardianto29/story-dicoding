@@ -1,14 +1,16 @@
+// src/scripts/pages/home-page.js
+import HomeView from "../views/home-view.js";
+import HomePresenter from "../presenters/home-presenter.js";
+
 export default class HomePage {
-    async render() {
-      return `
-        <section class="container">
-          <h1>Home Page</h1>
-        </section>
-      `;
-    }
-  
-    async afterRender() {
-      // Do your job here
-    }
+  async render() {
+    const view = new HomeView();
+    return view.getTemplate();
   }
-  
+
+  async afterRender() {
+    const view = new HomeView();
+    const presenter = new HomePresenter(view);
+    presenter.init();
+  }
+}
