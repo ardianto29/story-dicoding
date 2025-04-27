@@ -1,4 +1,3 @@
-// src/scripts/pages/home-page.js
 import HomeView from "../views/home-view.js";
 import HomePresenter from "../presenters/home-presenter.js";
 
