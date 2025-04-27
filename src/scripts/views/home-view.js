@@ -52,7 +52,7 @@ export default class HomeView {
               style="width:100%;max-width:200px;margin:5px auto;display:block;"
             />
             <p>${story.description}</p>
-            <a href="#/stories/${story.id}">Lihat detail</a>
+           <a href="#/detail/${story.id}">Lihat detail</a>
           </div>
         `;
         marker.bindPopup(popupContent, { maxWidth: 220 });
@@ -61,7 +61,6 @@ export default class HomeView {
       }
     });
 
-    // Zoom peta agar mencakup semua marker
     if (markers.length) {
       const group = L.featureGroup(markers);
       map.fitBounds(group.getBounds().pad(0.5));
