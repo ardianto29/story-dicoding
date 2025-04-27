@@ -7,13 +7,11 @@ export default class AddStoryPresenter {
   }
 
   init() {
-    // Pasang listener map click & form submit
     this.view.bindMapClick(this._onMapClick.bind(this));
     this.view.bindSubmit(this._onSubmit.bind(this));
   }
 
   _onMapClick({ lat, lon }) {
-    // (opsional) bisa tampilkan koordinat di UI atau log
     console.log("Koordinat dipilih:", lat, lon);
   }
 
