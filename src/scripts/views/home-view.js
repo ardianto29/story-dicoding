@@ -1,43 +1,59 @@
 // src/scripts/views/home-view.js
-import L from 'leaflet';
+import L from "leaflet";
 
 export default class HomeView {
   getTemplate() {
     return `
       <section class="home">
         <h2>Home Page</h2>
+        <button id="btn-subscribe">Aktifkan Notifikasi</button>
+        <button id="btn-unsubscribe">Nonaktifkan Notifikasi</button>
         <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
-        <div id="stories-list" class="stories-list"></div>
+        <div id="stories-list"></div>
       </section>
     `;
   }
 
+  bindSubscribe(handler) {
+    const btn = document.getElementById("btn-subscribe");
+    if (btn) btn.addEventListener("click", handler);
+  }
+
+  bindUnsubscribe(handler) {
+    const btn = document.getElementById("btn-unsubscribe");
+    if (btn) btn.addEventListener("click", handler);
+  }
+
   showStories(stories) {
-    const container = document.getElementById('stories-list');
+    const container = document.getElementById("stories-list");
     if (!stories || stories.length === 0) {
-      container.innerHTML = '<p>Tidak ada story untuk ditampilkan.</p>';
+      container.innerHTML = "<p>Tidak ada story untuk ditampilkan.</p>";
       return;
     }
-    container.innerHTML = stories.map(story => `
+    container.innerHTML = stories
+      .map(
+        (story) => `
       <article class="story-item">
         <img src="${story.photoUrl}" alt="${story.description}" width="200" />
         <h3>${story.name}</h3>
         <p>${story.description}</p>
         <p><small>${new Date(story.createdAt).toLocaleString()}</small></p>
       </article>
-    `).join('');
+    `
+      )
+      .join("");
   }
 
   initMap(stories) {
     // Inisialisasi peta
-    const map = L.map('map').setView([0, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    const map = L.map("map").setView([0, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
     const markers = [];
 
-    stories.forEach(story => {
+    stories.forEach((story) => {
       if (story.lat != null && story.lon != null) {
         const marker = L.marker([story.lat, story.lon]).addTo(map);
 
@@ -65,5 +81,9 @@ export default class HomeView {
       const group = L.featureGroup(markers);
       map.fitBounds(group.getBounds().pad(0.5));
     }
+  }
+
+  showMessage(message) {
+    alert(message);
   }
 }
