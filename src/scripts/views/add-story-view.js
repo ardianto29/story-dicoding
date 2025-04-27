@@ -1,5 +1,5 @@
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 export default class AddStoryView {
   getTemplate() {
@@ -25,6 +25,10 @@ export default class AddStoryView {
           <label for="photo">Foto:</label>
           <input type="file" id="photo" name="photo" accept="image/*" />
         </div>
+        <div id="camera-container">
+          <video id="camera-preview" autoplay style="width:100%;max-width:400px;"></video>
+          <button type="button" id="capture-btn">Ambil Foto</button>
+        </div>
         <button type="submit">Kirim</button>
       </form>
     </section>
@@ -48,6 +52,11 @@ export default class AddStoryView {
     });
   }
 
+  bindCapture(handler) {
+    const btn = document.getElementById("capture-btn");
+    btn.addEventListener("click", handler);
+  }
+
   bindSubmit(handler) {
     const form = document.getElementById("add-story-form");
     form.addEventListener("submit", (e) => {
@@ -69,4 +78,3 @@ export default class AddStoryView {
     window.location.hash = "/";
   }
 }
-  
