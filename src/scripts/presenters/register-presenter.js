@@ -1,5 +1,4 @@
-// src/scripts/presenters/register-presenter.js
-import { register } from '../data/api.js';
+import { register } from "../data/api.js";
 
 export default class RegisterPresenter {
   constructor(view) {
