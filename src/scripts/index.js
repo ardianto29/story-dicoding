@@ -10,16 +10,28 @@ if ("serviceWorker" in navigator) {
 
 import App from "./pages/app";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   const app = new App({
     content: document.querySelector("#main-content"),
     drawerButton: document.querySelector("#drawer-button"),
     navigationDrawer: document.querySelector("#navigation-drawer")
   });
 
-  await app.renderPage();
+  if (document.startViewTransition) {
+    document.startViewTransition(() => {
+      app.renderPage();
+    });
+  } else {
+    app.renderPage();
+  }
 
-  window.addEventListener("hashchange", async () => {
-    await app.renderPage();
+  window.addEventListener("hashchange", () => {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        app.renderPage();
+      });
+    } else {
+      app.renderPage();
+    }
   });
 });
