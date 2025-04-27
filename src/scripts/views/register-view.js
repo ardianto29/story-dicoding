@@ -1,7 +1,6 @@
-// src/scripts/views/register-view.js
 export default class RegisterView {
-    getTemplate() {
-      return `
+  getTemplate() {
+    return `
         <section class="register">
           <h2>Register</h2>
           <form id="register-form">
@@ -12,27 +11,26 @@ export default class RegisterView {
           </form>
         </section>
       `;
-    }
-  
-    bindSubmit(handler) {
-      const form = document.getElementById('register-form');
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const data = {
-          name: form.name.value,
-          email: form.email.value,
-          password: form.password.value,
-        };
-        handler(data);
-      });
-    }
-  
-    showMessage(msg) {
-      alert(msg);
-    }
-  
-    redirectToLogin() {
-      window.location.hash = '/login';
-    }
   }
-  
+
+  bindSubmit(handler) {
+    const form = document.getElementById("register-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        password: form.password.value
+      };
+      handler(data);
+    });
+  }
+
+  showMessage(msg) {
+    alert(msg);
+  }
+
+  redirectToLogin() {
+    window.location.hash = "/login";
+  }
+}
