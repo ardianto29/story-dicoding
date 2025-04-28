@@ -2,45 +2,41 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="/favicon.png" />
     <title>App</title>
 
     <link rel="stylesheet" href="/styles/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <script type="module" src="/scripts/index.js"></script>
   </head>
   <body>
     <!-- Skip link untuk keyboard users -->
     <a href="#main-content" class="skip-link">Lewati ke konten</a>
 
-    <header role="banner">
-      <div class="main-header container">
-        <a class="brand-name" href="#/">App</a>
-
-        <nav
-          id="navigation-drawer"
-          class="navigation-drawer"
-          role="navigation"
+    <header class="main-header">
+      <div class="container header-inner">
+        <a href="#/" class="brand-name">App</a>
+        <button
+          id="drawer-button"
+          class="drawer-button"
+          aria-label="Toggle menu"
         >
-          <ul id="nav-list" class="nav-list">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <nav id="navigation-drawer" class="navigation-drawer">
+          <ul class="nav-list">
             <li><a href="#/">Beranda</a></li>
             <li><a href="#/about">About</a></li>
           </ul>
         </nav>
-
-        <button
-          id="drawer-button"
-          class="drawer-button"
-          aria-label="Buka/Tutup navigasi"
-        >
-          ☰
-        </button>
       </div>
     </header>
-
+    
     <main
       id="main-content"
       class="main-content container"
