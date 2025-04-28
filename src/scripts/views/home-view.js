@@ -8,7 +8,7 @@ export default class HomeView {
         <h2>Home Page</h2>
         <button id="btn-subscribe">Aktifkan Notifikasi</button>
         <button id="btn-unsubscribe">Nonaktifkan Notifikasi</button>
-        <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
+        <div id="map" style="width:100%;height:300px;margin-bottom:1rem;"></div>
         <div id="stories-list"></div>
       </section>
     `;
@@ -34,7 +34,7 @@ export default class HomeView {
       .map(
         (story) => `
       <article class="story-item">
-        <img src="${story.photoUrl}" alt="${story.description}" width="200" />
+        <img src="${story.photoUrl}" alt="${story.description}" />
         <h3>${story.name}</h3>
         <p>${story.description}</p>
         <p><small>${new Date(story.createdAt).toLocaleString()}</small></p>
@@ -45,38 +45,62 @@ export default class HomeView {
   }
 
   initMap(stories) {
-    // Inisialisasi peta
-    const map = L.map("map").setView([0, 0], 2);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(map);
+    // 1) Definisikan dua tile layer
+    const osm = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "&copy; OpenStreetMap contributors"
+      }
+    );
+    const topo = L.tileLayer(
+      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "&copy; OpenTopoMap contributors"
+      }
+    );
 
-    const markers = [];
+    // 2) Inisialisasi map dengan OSM default dan custom zoom posisi
+    const map = L.map("map", {
+      center: [0, 0],
+      zoom: 2,
+      layers: [osm],
+      zoomControl: false
+    });
 
-    stories.forEach((story) => {
-      if (story.lat != null && story.lon != null) {
-        const marker = L.marker([story.lat, story.lon]).addTo(map);
+    // pindahkan control zoom ke pojok kiri atas
+    L.control.zoom({ position: "topleft" }).addTo(map);
 
-        // Konten popup
+    // 3) Tambahkan layer control (switcher)
+    L.control
+      .layers({ OpenStreetMap: osm, Topographic: topo }, null, {
+        collapsed: false,
+        position: "topright"
+      })
+      .addTo(map);
+
+    // 4) Tambahkan marker untuk setiap story dengan lat/lon
+    const markers = stories
+      .filter((s) => s.lat != null && s.lon != null)
+      .map((s) => {
+        const marker = L.marker([s.lat, s.lon]).addTo(map);
         const popupContent = `
           <div class="popup-story" style="text-align:center;">
-            <h3>${story.name}</h3>
-            <p><small>${new Date(story.createdAt).toLocaleString()}</small></p>
+            <h3>${s.name}</h3>
+            <p><small>${new Date(s.createdAt).toLocaleString()}</small></p>
             <img 
-              src="${story.photoUrl}" 
-              alt="${story.description}" 
+              src="${s.photoUrl}" 
+              alt="${s.description}" 
               style="width:100%;max-width:200px;margin:5px auto;display:block;"
             />
-            <p>${story.description}</p>
-           <a href="#/detail/${story.id}">Lihat detail</a>
+            <p>${s.description}</p>
+            <a href="#/detail/${s.id}">Lihat detail</a>
           </div>
         `;
         marker.bindPopup(popupContent, { maxWidth: 220 });
+        return marker;
+      });
 
-        markers.push(marker);
-      }
-    });
-
+    // 5) Fit bounds jika ada marker
     if (markers.length) {
       const group = L.featureGroup(markers);
       map.fitBounds(group.getBounds().pad(0.5));
