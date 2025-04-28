@@ -1,3 +1,20 @@
+/* src/styles/styles.css */
+
+/* 1. Variabel warna */
+:root {
+  --color-primary: #264653;
+  --color-secondary: #2a9d8f;
+  --color-accent: #e9c46a;
+  --color-bg: #f4f1de;
+  --color-text: #333333;
+}
+
+/* 2. Reset & aksesibilitas */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .skip-link {
   position: absolute;
   left: -999px;
@@ -10,143 +27,197 @@
   padding: 8px;
   z-index: 1000;
 }
-
 .skip-link:focus {
   left: 1rem;
   top: 1rem;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  text-decoration: none;
 }
 
-
-* {
-  margin: 0;
-  padding: 0;
-
-  box-sizing: border-box;
-}
-
+/* 3. Base Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
-
 .container {
-  padding-inline: 32px;
+  padding-inline: 2rem;
   margin-inline: auto;
   max-width: 1300px;
 }
 
-header {
-  background-color: lightskyblue;
-}
-
+/* 4. Header (full-width background) */
 .main-header {
-  min-height: 90px;
-  padding-block: 20px;
+  width: 100%;
+  background-color: var(--color-primary);
+}
 
+/* 5. Inner wrapper: centering konten di dalam header */
+.header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  justify-content: flex-start;
+  padding-block: 1rem;
+  position: relative;
 }
 
+/* 6. Brand di kiri */
 .brand-name {
-  font-size: 1.125rem;
-  font-weight: bold;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
   text-decoration: none;
-  color: #333;
+  margin-right: auto;
 }
 
+/* 7. Hamburger button (mobile) */
+.drawer-button {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: block;
+}
+
+/* 8. Off-canvas drawer (mobile) */
 .navigation-drawer {
-  min-height: 100vh;
-  width: 200px;
-  padding: 20px 10px;
-  background-color: #fff;
-
   position: fixed;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-
-  box-shadow: 0 0 4px 2px #00000033;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 220px;
+  background: #fff;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.2);
   transform: translateX(-100%);
-  transition: transform 350ms;
-
-  z-index: 9999;
+  transition: transform 300ms ease;
+  z-index: 1000;
 }
-
 .navigation-drawer.open {
   transform: translateX(0);
 }
 
-.drawer-button {
-  padding: 8px;
-  border: 0;
-  border-radius: 4px;
-
-  display: inline-block;
-  background-color: transparent;
-
-  font-weight: bold;
-  font-size: 28px;
-  color: #141e16;
-
-  cursor: pointer;
-}
-
+/* 9. Daftar menu (mobile) */
 .nav-list {
   list-style: none;
-
   display: flex;
   flex-direction: column;
-  gap: 10px 20px;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-inline: 1rem;
 }
-
 .nav-list li a {
-  padding: 6px 10px;
-
   display: block;
-  
-  color: #333;
+  padding: 0.5rem 1rem;
+  color: var(--color-text);
   text-decoration: none;
+  border-radius: 4px;
 }
-
 .nav-list li a:hover {
-  text-decoration: underline;
+  background: var(--color-secondary);
+  color: #fff;
 }
 
-/* MAIN */
+/* 10. Konten utama */
 .main-content {
-  padding-block: 20px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  padding-block: 3rem;
 }
 
-/* Write your styles more here */
+/* Tambahan: styling khusus Home Page */
+.home h2 {
+  margin-bottom: 1rem;    /* beri jarak di bawah judul */
+}
+.home button {
+  margin-right: 1rem;     /* beri jarak antar tombol */
+  margin-bottom: 1rem;    /* untuk mobile, tombol tak menempel ke map */
+}
 
-@media screen and (width > 1000px) {
+/* 11. Tombol umum */
+button, .btn {
+  background: var(--color-secondary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+button:hover, .btn:hover {
+  opacity: 0.9;
+}
+
+/* 12. Peta responsif */
+#map {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 1rem;
+}
+
+/* 13. Grid untuk story */
+#stories-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+  gap: 1rem;
+}
+.story-item {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.story-item img {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+/* 14. Desktop layout (≥1000px) */
+@media (min-width: 1000px) {
+  /* sembunyikan hamburger */
+  .drawer-button {
+    display: none;
+  }
+
+  /* nav jadi inline di header */
   .navigation-drawer {
-    min-height: auto;
-    width: auto;
-    padding: 0;
-    background-color: transparent;
-
-    flex-direction: row;
-    justify-content: space-between;
-
     position: static;
+    transform: none;
+    height: auto;
+    width: auto;
+    background: transparent;
     box-shadow: none;
-    transform: translateX(0);
+    margin: 0;
+    padding: 0;
   }
 
   .nav-list {
     flex-direction: row;
+    align-items: center;
+    gap: 2rem;            /* jarak antar menu */
+    margin: 0;
+    padding-inline: 2rem; /* ruang kiri+kanan */
   }
 
   .nav-list li a {
-    display: inline-block;
+    color: #fff;
+    padding: 0.75rem 1rem;
   }
+}
 
-  .drawer-button {
-    display: none;
+/* 15. Mobile adjustment (≤600px) */
+@media (max-width: 600px) {
+  .header-inner {
+    padding-inline: 1rem;
+  }
+  .home h2 {
+    font-size: 1.25rem;
+  }
+  #map {
+    height: 200px;
   }
 }
