@@ -1,3 +1,5 @@
+// src/scripts/index.js
+
 import "../styles/styles.css";
 import "leaflet/dist/leaflet.css";
 
@@ -11,27 +13,17 @@ if ("serviceWorker" in navigator) {
 import App from "./pages/app";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const app = new App({
-    content: document.querySelector("#main-content"),
-    drawerButton: document.querySelector("#drawer-button"),
-    navigationDrawer: document.querySelector("#navigation-drawer")
-  });
+  const drawerButton = document.querySelector("#drawer-button");
+  const navigationDrawer = document.querySelector("#navigation-drawer");
+  const content = document.querySelector("#main-content");
 
-  if (document.startViewTransition) {
-    document.startViewTransition(() => {
-      app.renderPage();
-    });
-  } else {
-    app.renderPage();
-  }
+  const app = new App({ drawerButton, navigationDrawer, content });
 
+  // Render halaman pertama kali
+  app.renderPage();
+
+  // Re-render saat hash berubah
   window.addEventListener("hashchange", () => {
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        app.renderPage();
-      });
-    } else {
-      app.renderPage();
-    }
+    app.renderPage();
   });
 });
