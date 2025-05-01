@@ -1,4 +1,3 @@
-// src/scripts/pages/app.js
 import routes from "../routes/routes";
 import { getActiveRoute } from "../routes/url-parser";
 import "leaflet/dist/leaflet.css";
@@ -58,22 +57,31 @@ class App {
     const page = routes[url];
     const container = this.#content;
 
-    // 1) Fade‐out konten lama
-    await container.animate([{ opacity: 1 }, { opacity: 0 }], {
-      duration: 200,
-      fill: "forwards"
-    }).finished;
+    // bungkus seluruh render dengan View Transition API
+    const doRender = async () => {
+      // 1) Fade‐out konten lama
+      await container.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: 200,
+        fill: "forwards"
+      }).finished;
 
-    // 2) Ganti konten
-    container.innerHTML = await page.render();
-    await page.afterRender();
+      // 2) Ganti konten
+      container.innerHTML = await page.render();
+      await page.afterRender();
 
-    // 3) Reset scroll & fade‐in konten baru
-    container.scrollTop = 0;
-    container.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: 200,
-      fill: "forwards"
-    });
+      // 3) Reset scroll & fade‐in konten baru
+      container.scrollTop = 0;
+      container.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 200,
+        fill: "forwards"
+      });
+    };
+
+    if ("startViewTransition" in document) {
+      await document.startViewTransition(doRender);
+    } else {
+      await doRender();
+    }
   }
 }
 
