@@ -1,6 +1,7 @@
 import "../styles/styles.css";
 import "leaflet/dist/leaflet.css";
 
+// Daftarkan Service Worker (jika didukung)
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/sw.js")
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const app = new App({ drawerButton, navigationDrawer, content });
 
-  // Fungsi pembungkus renderPage dengan View Transition API
+  // Bungkus app.renderPage() dengan View Transition API
   const renderWithTransition = async () => {
     const doRender = () => app.renderPage();
     if ("startViewTransition" in document) {
