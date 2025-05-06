@@ -444,3 +444,41 @@ main {
   view-transition-name: page;
   view-transition-group: cross-fade;
 }
+
+#offline-stories {
+  margin-top: 2rem;
+}
+
+.offline-item {
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+
+.offline-item h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #2d3748;
+}
+
+.offline-item p {
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.offline-item .delete-offline {
+  display: inline-block;
+  background-color: #e53e3e;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.offline-item .delete-offline:hover {
+  background-color: #c53030;
+}
