@@ -54,7 +54,7 @@ class App {
 
   async renderPage() {
     const url = getActiveRoute();
-    const page = routes[url];
+    const page = routes[url] || routes["/404"];
     const container = this.#content;
 
     // bungkus seluruh render dengan View Transition API
