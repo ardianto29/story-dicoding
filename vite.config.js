@@ -3,11 +3,11 @@ import { resolve } from "path";
 
 
 export default defineConfig({
-  base: "/story-dicoding/",
+  base: "/",
   root: resolve(__dirname, "src"),
   publicDir: resolve(__dirname, "src", "public"),
   build: {
-    outDir: resolve(__dirname, "docs"),
+    outDir: resolve(__dirname, "dist"),
     emptyOutDir: true
   },
   resolve: {
