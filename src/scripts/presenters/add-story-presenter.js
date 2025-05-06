@@ -1,7 +1,10 @@
-// src/scripts/presenters/add-story-presenter.js
-
 import { getToken } from "../utils/index.js";
 import { addNewStory } from "../data/api.js";
+import {
+  saveStoryOffline,
+  getAllStoriesOffline,
+  deleteStoryOffline
+} from "../index.js";
 
 export default class AddStoryPresenter {
   constructor(view) {
@@ -26,6 +29,9 @@ export default class AddStoryPresenter {
         this.stream = null;
       }
     });
+
+    // 4) Muat dan tampilkan daftar story yang tersimpan offline
+    await this._loadOfflineStories();
   }
 
   // Mengakses kamera dan menampilkan preview di <video id="camera-preview">
@@ -80,7 +86,17 @@ export default class AddStoryPresenter {
     this.selectedLon = lon;
   }
 
-  // Submit story ke API
+  // Muat semua story yang tersimpan offline, kirim ke view, dan bind delete
+  async _loadOfflineStories() {
+    const items = await getAllStoriesOffline();
+    this.view.renderOfflineStories(items);
+    this.view.bindDeleteOffline(async (id) => {
+      await deleteStoryOffline(id);
+      await this._loadOfflineStories();
+    });
+  }
+
+  // Submit story ke API atau fallback ke IndexedDB saat offline
   async _onSubmit({ description, photo, lat, lon }) {
     // utamakan foto dari kamera jika sudah capture
     const file = this.photoBlob || photo;
@@ -101,13 +117,20 @@ export default class AddStoryPresenter {
       lon: this.selectedLon ?? lon
     };
 
-    const token = getToken();
-    const { error, message } = await addNewStory(token, payload);
-
-    this.view.showMessage(message);
-    if (!error) {
-      // pindah ke Home setelah sukses
-      window.location.hash = "#/";
+    try {
+      const token = getToken();
+      const { error, message } = await addNewStory(token, payload);
+      this.view.showMessage(message);
+      if (!error) {
+        // pindah ke Home setelah sukses
+        window.location.hash = "#/";
+      }
+    } catch (err) {
+      // Jika network error (offline), simpan ke IndexedDB
+      await saveStoryOffline(payload);
+      this.view.showMessage("Story disimpan offline");
+      // Refresh daftar yang tersimpan
+      await this._loadOfflineStories();
     }
   }
 }
