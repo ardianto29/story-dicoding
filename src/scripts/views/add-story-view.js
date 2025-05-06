@@ -30,6 +30,12 @@ export default class AddStoryView {
           </div>
           <button type="submit">Kirim</button>
         </form>
+
+        <!-- Daftar story offline -->
+        <section style="margin-top:2rem;">
+          <h3>Stories Tersimpan Offline</h3>
+          <div id="offline-stories"></div>
+        </section>
       </section>
     `;
   }
@@ -65,6 +71,32 @@ export default class AddStoryView {
         photo: form.photo.files[0],
         lat: form.lat.value ? Number(form.lat.value) : null,
         lon: form.lon.value ? Number(form.lon.value) : null
+      });
+    });
+  }
+
+
+  renderOfflineStories(items) {
+    const container = document.getElementById("offline-stories");
+    if (!items || items.length === 0) {
+      container.innerHTML = "<p>Tidak ada story tersimpan offline.</p>";
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="offline-item" style="border:1px solid #ddd; padding:0.5rem; margin-bottom:0.5rem;">
+        <p><strong>ID:</strong> ${item.id}</p>
+        <p><strong>Deskripsi:</strong> ${item.description}</p>
+        <p><strong>Koordinat:</strong> ${item.lat}, ${item.lon}</p>
+        <button data-id="${item.id}" class="delete-offline">Hapus Offline</button>
+      </div>
+    `).join("");
+  }
+
+  bindDeleteOffline(handler) {
+    document.querySelectorAll("#offline-stories .delete-offline").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.id);
+        handler(id);
       });
     });
   }
