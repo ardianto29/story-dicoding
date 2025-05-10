@@ -19,16 +19,15 @@
   position: absolute;
   top: -40px;
   left: 0;
-  background-color: #005fcc;
-  color: #fff; 
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  z-index: 10000; 
+  background: white;
+  color: black;
+  padding: 8px;
+  font-size: 0.9rem;
+  z-index: 100;
   transition: top 0.3s ease;
 }
 .skip-link:focus {
-  top: 0;                    
-  outline: 3px solid #ff0;   
+  top: 0;
 }
 
 /* 3. Base Styles */
