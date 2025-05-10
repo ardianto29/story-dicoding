@@ -1,4 +1,6 @@
 const CACHE_NAME = "pwa-cache-v1";
+const IMAGE_CACHE = "pwa-image-cache-v1";
+
 const ASSETS = [
   "/",
   "/index.html",
@@ -27,7 +29,7 @@ self.addEventListener("activate", (evt) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key !== CACHE_NAME)
+            .filter((key) => key !== CACHE_NAME && key !== IMAGE_CACHE)
             .map((key) => caches.delete(key))
         )
       )
@@ -39,19 +41,16 @@ self.addEventListener("fetch", (evt) => {
   const req = evt.request;
   const url = new URL(req.url);
 
-  // 1) Navigasi (refresh/direct URL) → fallback ke offline.html saat offline
   if (req.mode === "navigate") {
     evt.respondWith(fetch(req).catch(() => caches.match("/offline.html")));
     return;
   }
 
-  // 2) Asset statis yang sudah kita precache → cache-first
   if (ASSETS.includes(url.pathname)) {
     evt.respondWith(caches.match(req).then((cached) => cached || fetch(req)));
     return;
   }
 
-  // 3) Dynamic caching untuk same-origin lain (JS/CSS hashed, gambar, etc.)
   if (url.origin === self.location.origin) {
     evt.respondWith(
       caches
@@ -67,12 +66,27 @@ self.addEventListener("fetch", (evt) => {
             return res;
           });
         })
-        // jika semua gagal, fallback ke offline.html agar UI tidak blank
         .catch(() => caches.match("/offline.html"))
     );
+    return;
   }
 
-  // request cross-origin (API eksternal, CDN, chrome-extension) dibiarkan browser handle
+  if (req.destination === "image") {
+    evt.respondWith(
+      caches.open(IMAGE_CACHE).then((cache) =>
+        cache.match(req).then((cached) => {
+          if (cached) return cached;
+          return fetch(req).then((res) => {
+            if (res && res.status === 200) {
+              cache.put(req, res.clone());
+            }
+            return res;
+          });
+        })
+      )
+    );
+    return;
+  }
 });
 
 self.addEventListener("push", (event) => {
