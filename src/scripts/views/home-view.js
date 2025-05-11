@@ -24,6 +24,10 @@ export default class HomeView {
     if (btn) btn.addEventListener("click", handler);
   }
 
+  /**
+   * Render daftar story dengan tombol menu & dropdown
+   * @param {Array<Object>} stories
+   */
   showStories(stories) {
     const container = document.getElementById("stories-list");
     if (!stories || stories.length === 0) {
@@ -33,11 +37,36 @@ export default class HomeView {
     container.innerHTML = stories
       .map(
         (story) => `
-      <article class="story-item">
-        <img src="${story.photoUrl}" alt="${story.description}" />
-        <h3>${story.name}</h3>
-        <p>${story.description}</p>
+      <article class="story-item relative bg-white rounded-lg shadow p-4">
+        <img 
+          src="${story.photoUrl}" 
+          alt="${story.description}" 
+          class="w-full h-40 object-cover rounded" 
+        />
+        <h3 class="mt-2 font-semibold text-lg">${story.name}</h3>
+        <p class="text-sm text-gray-600">${story.description}</p>
         <p><small>${new Date(story.createdAt).toLocaleString()}</small></p>
+
+        <!-- tombol titik tiga -->
+        <button
+          class="story-menu-button absolute top-2 right-2 text-2xl leading-none focus:outline-none"
+          data-id="${story.id}"
+        >⋮</button>
+
+        <!-- dropdown menu -->
+        <div
+          id="dropdown-${story.id}"
+          class="story-dropdown hidden absolute top-8 right-2 w-40 bg-white border rounded shadow-md"
+        >
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100 btn-add-favorite"
+            data-id="${story.id}"
+          >Tambahkan Favorit</button>
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100 btn-add-bookmark"
+            data-id="${story.id}"
+          >Tambahkan ke Bookmark</button>
+        </div>
       </article>
     `
       )
