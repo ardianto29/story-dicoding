@@ -5,10 +5,12 @@ import RegisterPage from "../pages/register-page.js";
 import AddStoryPage from "../pages/add-story-page.js";
 import DetailPage from "../pages/detail-page.js";
 import NotFoundPage from "../pages/not-found-page.js";
+import FavoritesPage from "../pages/favorites-page.js";
 
 const routes = {
   "/": new HomePage(),
   "/about": new AboutPage(),
+  "/favorites": new FavoritesPage(),
   "/login": new LoginPage(),
   "/register": new RegisterPage(),
   "/add-story": new AddStoryPage(),
