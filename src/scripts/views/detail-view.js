@@ -1,7 +1,12 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { addBookmark } from "../utils/db.js";
 
 export default class DetailView {
+  constructor() {
+    this._story = null; // untuk menyimpan data story saat render
+  }
+
   getTemplate() {
     return `
       <section id="detail-page" class="detail-story">
@@ -10,8 +15,12 @@ export default class DetailView {
     `;
   }
 
+  /**
+   * Render detail story, plus tombol bookmark
+   */
   renderDetail(story) {
-    const container = document.getElementById('detail-page');
+    this._story = story; // simpan untuk handler
+    const container = document.getElementById("detail-page");
     container.innerHTML = `
       <a href="#/" style="display:block; margin-bottom:1rem;">← Kembali ke Home</a>
       <h2>Story by ${story.name}</h2>
@@ -23,27 +32,37 @@ export default class DetailView {
       />
       <p>${story.description}</p>
 
-      <!-- tombol bookmark baru -->
-      <button id="btn-favorite" style="padding:0.5rem 1rem; margin-bottom:1rem;">
-        Bookmark
-      </button>
+      <button id="bookmark-button" class="btn">Tambahkan ke Bookmark</button>
 
       <div id="map-detail" style="height:300px; margin-top:1rem;"></div>
     `;
+
+    // Pasang handler bookmark setelah elemen dibuat
+    const btn = document.getElementById("bookmark-button");
+    btn.addEventListener("click", async () => {
+      try {
+        await addBookmark(this._story);
+        alert("Berhasil menambahkan ke Bookmark");
+      } catch (err) {
+        console.error("Gagal bookmark:", err);
+        alert("Gagal menambahkan ke Bookmark");
+      }
+    });
   }
 
   initMap(lat, lon) {
-    const el = document.getElementById('map-detail');
-    el.innerHTML = ''; // kosongkan dulu
-    const map = L.map('map-detail').setView([lat, lon], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    const el = document.getElementById("map-detail");
+    el.innerHTML = ""; // kosongkan dulu
+    const map = L.map("map-detail").setView([lat, lon], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
     L.marker([lat, lon]).addTo(map);
   }
 
   showError(msg) {
-    document.getElementById('detail-page').innerHTML =
-      `<p style="color:red;">${msg}</p>`;
+    document.getElementById(
+      "detail-page"
+    ).innerHTML = `<p style="color:red;">${msg}</p>`;
   }
 }
