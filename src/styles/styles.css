@@ -157,12 +157,50 @@ button:hover,
   margin-bottom: 1rem;
 }
 
-/* 13. Grid untuk story */
-#stories-list {
+#favorites-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+  margin: 0 auto;
 }
+
+/* ===== Kotak putih per item (sama dengan Home) ===== */
+#favorites-list .story-item {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative; /* agar dropdown absolut tetap di dalam kotak */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Gambar di dalam card */
+#favorites-list .story-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Judul & tanggal */
+#favorites-list .story-item h3 {
+  font-size: 1.125rem;
+  margin: 0.5rem 0 0.25rem;
+}
+#favorites-list .story-item p {
+  margin: 0;
+  color: #555;
+}
+
+/* Tombol menu di dalam card */
+#favorites-list .story-item .story-menu-button {
+  margin-top: auto;
+}
+
 .story-item {
   background: #fff;
   padding: 1rem;
@@ -480,4 +518,23 @@ main {
 
 .offline-item .delete-offline:hover {
   background-color: #c53030;
+}
+
+/* hide dropdown by default */
+.story-dropdown {
+  display: none;
+}
+
+/* tampilkan saat diberikan class .show oleh JS */
+.story-dropdown.show {
+  display: block;
+}
+
+/* optional: smooth transition */
+.story-dropdown {
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+.story-dropdown.show {
+  opacity: 1;
 }
