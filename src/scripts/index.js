@@ -97,6 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const navigationDrawer = document.querySelector("#navigation-drawer");
   const content = document.querySelector("#main-content");
 
+  const skipLink = document.querySelector(".skip-link");
+  if (skipLink && content) {
+    skipLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      content.focus();
+    });
+  }
+
   const app = new App({ drawerButton, navigationDrawer, content });
 
   // Bungkus app.renderPage() dengan View Transition API
