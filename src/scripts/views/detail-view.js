@@ -14,7 +14,7 @@ export default class DetailView {
     const container = document.getElementById('detail-page');
     container.innerHTML = `
       <a href="#/" style="display:block; margin-bottom:1rem;">← Kembali ke Home</a>
-      <h2>${story.name}</h2>
+      <h2>Story by ${story.name}</h2>
       <p><small>${new Date(story.createdAt).toLocaleString()}</small></p>
       <img
         src="${story.photoUrl}"
@@ -22,6 +22,12 @@ export default class DetailView {
         style="max-width:100%; margin:1rem 0;"
       />
       <p>${story.description}</p>
+
+      <!-- tombol bookmark baru -->
+      <button id="btn-favorite" style="padding:0.5rem 1rem; margin-bottom:1rem;">
+        Bookmark
+      </button>
+
       <div id="map-detail" style="height:300px; margin-top:1rem;"></div>
     `;
   }
