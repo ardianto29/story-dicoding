@@ -1,15 +1,15 @@
-import FavoritesView      from "../views/favorites-view.js";
+// src/scripts/pages/favorites-page.js
+
 import FavoritesPresenter from "../presenters/favorites-presenter.js";
 
-export default class FavoritesPage {
+export default {
   async render() {
-    const view = new FavoritesView();
-    return view.getTemplate();
-  }
-
+    // Presenter yg mengurus mount + fetch + render
+    await FavoritesPresenter.init();
+    // Karena Presenter sudah inject ke #app, kita kembalikan string kosong
+    return "";
+  },
   async afterRender() {
-    const view      = new FavoritesView();
-    const presenter = new FavoritesPresenter(view);
-    await presenter.init();
+    // tidak perlu implementasi tambahan
   }
-}
+};
