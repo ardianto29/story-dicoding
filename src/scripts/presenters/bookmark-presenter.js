@@ -1,14 +1,34 @@
-import BookmarkView from '../views/bookmark-view.js';
+import BookmarkView from "../views/bookmark-view.js";
+import { getAllBookmarks, removeBookmark } from "../utils/db.js";
 
 const BookmarkPresenter = {
   async init() {
-    // 1. siapkan view
+    // 1. Buat instance View dan inject template dasar ke <div id="app">
     const view = new BookmarkView();
-    // 2. render struktur dasar ke <div id="app">
-    const app = document.getElementById('app');
-    app.innerHTML = view.getTemplate();
-    // 3. render isi bookmark
-    await view.renderBookmarks();
+    view.mount("#app");
+
+    // 2. Bind callback onRemove → Presenter
+    view.onRemove = async (id) => {
+      try {
+        await removeBookmark(id);
+        alert("Bookmark dihapus");
+        // refresh daftar setelah berhasil hapus
+        const updated = await getAllBookmarks();
+        view.render(updated);
+      } catch (err) {
+        console.error("Gagal menghapus bookmark:", err);
+        alert("Gagal menghapus bookmark");
+      }
+    };
+
+    // 3. Fetch data awal dan render
+    try {
+      const items = await getAllBookmarks();
+      view.render(items);
+    } catch (err) {
+      console.error("Gagal memuat data bookmark:", err);
+      alert("Gagal memuat bookmark");
+    }
   }
 };
 
