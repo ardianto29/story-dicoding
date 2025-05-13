@@ -1,25 +1,36 @@
+// src/scripts/presenters/favorites-presenter.js
+
+import FavoritesView from "../views/favorites-view.js";
 import { getAllFavorites, removeFavorite } from "../utils/db.js";
 
-export default class FavoritesPresenter {
-  constructor(view) {
-    this.view = view;
-  }
-
+const FavoritesPresenter = {
   async init() {
-    const stories = await getAllFavorites();
-    this.view.renderFavorites(stories);
-    this._bindRemoveButtons();
-  }
+    // 1. Prepare view
+    const view = new FavoritesView();
+    view.mount("#app");
 
-  _bindRemoveButtons() {
-    document.querySelectorAll(".btn-remove-favorite").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = Number(btn.dataset.id);
+    // 2. Bind handler hapus favorit ke Presenter
+    view.onRemove = async (id) => {
+      try {
         await removeFavorite(id);
-        // rerender setelah hapus
+        alert("Favorit dihapus");
         const updated = await getAllFavorites();
-        this.view.renderFavorites(updated);
-      });
-    });
+        view.render(updated);
+      } catch (err) {
+        console.error("Gagal menghapus favorit:", err);
+        alert("Gagal menghapus favorit");
+      }
+    };
+
+    // 3. Fetch data dan render list awal
+    try {
+      const items = await getAllFavorites();
+      view.render(items);
+    } catch (err) {
+      console.error("Gagal memuat favorit:", err);
+      alert("Gagal memuat favorit");
+    }
   }
-}
+};
+
+export default FavoritesPresenter;
