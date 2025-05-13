@@ -1,23 +1,11 @@
-import BookmarkView from '../views/bookmark-view.js';
+import BookmarkPresenter from "../presenters/bookmark-presenter.js";
 
 export default class BookmarkPage {
-  constructor() {
-    this.view = new BookmarkView();
+  async render() {
+    const presenter = new BookmarkPresenter("#app");
+    await presenter.init();
+    return "";
   }
 
-  /**
-   * Di sini hanya RETURN string HTML,
-   * jangan langsung inject ke DOM.
-   */
-  render() {
-    return this.view.getTemplate();
-  }
-
-  /**
-   * Setelah container.innerHTML di-setup,
-   * panggil renderBookmarks untuk mengisi grid.
-   */
-  async afterRender() {
-    await this.view.renderBookmarks();
-  }
+  async afterRender() {}
 }
