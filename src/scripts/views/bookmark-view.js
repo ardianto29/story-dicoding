@@ -1,15 +1,9 @@
-// src/scripts/views/bookmark-view.js
-
-import { getAllBookmarks, removeBookmark } from '../utils/db.js';
-
 export default class BookmarkView {
   constructor() {
-    this._containerId = 'bookmarks-list';
+    this._containerId = "bookmarks-list";
+    this.onRemove = null;
   }
 
-  /**
-   * Kembalikan HTML untuk halaman Bookmark
-   */
   getTemplate() {
     return `
       <section class="bookmark-page">
@@ -21,23 +15,17 @@ export default class BookmarkView {
     `;
   }
 
-  /**
-   * Render semua bookmark ke dalam #bookmarks-list
-   */
-  async renderBookmarks() {
+  render(items) {
     const container = document.getElementById(this._containerId);
-    const stories = await getAllBookmarks();
 
-    // kalau kosong
-    if (!stories || stories.length === 0) {
+    if (!items || items.length === 0) {
       container.innerHTML = `
         <p class="empty-message">Belum ada bookmark untuk ditampilkan.</p>
       `;
       return;
     }
 
-    // bangun markup setiap story
-    container.innerHTML = stories
+    container.innerHTML = items
       .map((story) => {
         const dateStr = new Date(story.createdAt).toLocaleString();
         return `
@@ -51,29 +39,21 @@ export default class BookmarkView {
           </article>
         `;
       })
-      .join('');
+      .join("");
 
-    // pasang listener tombol hapus
-    container
-      .querySelectorAll('.btn-remove-bookmark')
-      .forEach((btn) => {
-        btn.addEventListener('click', async (e) => {
-          const id = e.currentTarget.dataset.id;
-          await removeBookmark(id);
-          alert('Bookmark dihapus');
-          this.renderBookmarks(); // re-render ulang
-        });
+    // Pasang listener tombol hapus, yang memanggil callback Presenter
+    container.querySelectorAll(".btn-remove-bookmark").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (typeof this.onRemove === "function") {
+          this.onRemove(id);
+        }
       });
+    });
   }
 
-  /**
-   * Entry point, dipanggil oleh router/controller
-   */
-  async render() {
-    // render struktur dasar
-    const app = document.getElementById('app');
+  mount(appSelector) {
+    const app = document.querySelector(appSelector);
     app.innerHTML = this.getTemplate();
-    // lalu render isinya
-    await this.renderBookmarks();
   }
 }
