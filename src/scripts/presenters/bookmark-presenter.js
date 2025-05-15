@@ -1,7 +1,12 @@
 import BookmarkView from "../views/bookmark-view.js";
 import { getAllBookmarks, removeBookmark } from "../utils/db.js";
 
-const BookmarkPresenter = {
+export default class BookmarkPresenter {
+  constructor(containerSelector) {
+    this.view = new BookmarkView();
+    this.view.mount(containerSelector);
+  }
+
   async init() {
     // 1. Buat instance View dan inject template dasar ke <div id="app">
     const view = new BookmarkView();
@@ -30,6 +35,4 @@ const BookmarkPresenter = {
       alert("Gagal memuat bookmark");
     }
   }
-};
-
-export default BookmarkPresenter;
+}
