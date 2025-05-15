@@ -6,6 +6,5 @@ export default class BookmarkPage {
     await presenter.init();
     return "";
   }
-
   async afterRender() {}
 }
