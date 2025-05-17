@@ -1,7 +1,7 @@
 import { getAllStories } from "../data/api.js";
 import { getToken } from "../utils/index.js";
 import { subscribePush, unsubscribePush } from "../utils/push-notification.js";
-import { addFavorite, addBookmark } from "../utils/db.js";
+import { addFavorite, addBookmark, saveStories } from "../utils/db.js";
 
 export default class HomePresenter {
   constructor(view) {
@@ -23,8 +23,9 @@ export default class HomePresenter {
       return;
     }
 
-    // simpan stories untuk keperluan binding menu
+    //simpan stories ke IndexedDB
     this._stories = listStory;
+    await saveStories(listStory);
 
     // render stories & peta
     this.view.showStories(listStory);
