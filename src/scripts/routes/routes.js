@@ -7,12 +7,14 @@ import DetailPage from "../pages/detail-page.js";
 import NotFoundPage from "../pages/not-found-page.js";
 import FavoritesPage from "../pages/favorites-page.js";
 import BookmarkPage from "../pages/bookmark-page.js";
+import CachedStoriesPage from "../pages/cached-stories-page.js";
 
 const routes = {
   "/": new HomePage(),
   "/about": new AboutPage(),
   "/favorites": new FavoritesPage(),
   "/bookmarks": new BookmarkPage(),
+  "/cached-stories": new CachedStoriesPage(),
   "/login": new LoginPage(),
   "/register": new RegisterPage(),
   "/add-story": new AddStoryPage(),
