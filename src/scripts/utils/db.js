@@ -1,7 +1,8 @@
 const DB_NAME = "story-dicoding-db";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const STORE_NAME = "favorites";
 const BOOKMARK_STORE = "bookmarks";
+const STORY_STORE = "stories";
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
@@ -16,6 +17,9 @@ function openDatabase() {
       // new bookmarks store
       if (!db.objectStoreNames.contains(BOOKMARK_STORE)) {
         db.createObjectStore(BOOKMARK_STORE, { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains(STORY_STORE)) {
+        db.createObjectStore(STORY_STORE, { keyPath: "id" });
       }
     };
 
@@ -105,6 +109,39 @@ export async function removeBookmark(id) {
     const tx = db.transaction(BOOKMARK_STORE, "readwrite");
     const store = tx.objectStore(BOOKMARK_STORE);
     const req = store.delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function saveStories(stories) {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORY_STORE, "readwrite");
+    const store = tx.objectStore(STORY_STORE);
+    stories.forEach((story) => store.put(story));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function getAllCachedStories() {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORY_STORE, "readonly");
+    const store = tx.objectStore(STORY_STORE);
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function clearCachedStories() {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORY_STORE, "readwrite");
+    const store = tx.objectStore(STORY_STORE);
+    const req = store.clear();
     req.onsuccess = () => resolve();
     req.onerror = () => reject(req.error);
   });
