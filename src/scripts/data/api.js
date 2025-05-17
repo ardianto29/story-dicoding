@@ -1,4 +1,6 @@
 import CONFIG from "../config.js";
+// Tambahan untuk IndexedDB caching
+import { saveStories, getAllCachedStories } from "../utils/db.js";
 
 const BASE_URL = CONFIG.BASE_URL;
 
@@ -30,19 +32,38 @@ export async function login({ email, password }) {
   return res.json();
 }
 
+/**
+ * Fetch semua stories:
+ * - Jika online: fetch dari API, simpan ke IndexedDB, lalu return JSON.
+ * - Jika offline / error: ambil dari IndexedDB lewat getAllCachedStories()
+ */
 export async function getAllStories(token, page = 1, size = 10, location = 0) {
   const url = new URL(ENDPOINT.STORIES);
   url.searchParams.set("page", page);
   url.searchParams.set("size", size);
   url.searchParams.set("location", location);
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  return res.json();
+
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const resJson = await res.json();
+
+    // jika berhasil dan ada listStory, simpan ke IndexedDB
+    if (!resJson.error && Array.isArray(resJson.listStory)) {
+      await saveStories(resJson.listStory);
+    }
+
+    return resJson;
+  } catch (error) {
+    console.warn("Fetch STORIES gagal, fallback ke cache IndexedDB:", error);
+    const cached = await getAllCachedStories();
+    return { error: false, listStory: cached };
+  }
 }
 
 export async function getStoryDetail(token, id) {
-  const res = await fetch(`${BASE_URL}/stories/${id}`, {
+  const res = await fetch(ENDPOINT.STORY_DETAIL(id), {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -82,7 +103,7 @@ export async function addNewStoryGuest({ description, photo, lat, lon }) {
 }
 
 export async function subscribeNotification(token, subscription) {
-  const res = await fetch(`${BASE_URL}/notifications/subscribe`, {
+  const res = await fetch(ENDPOINT.NOTIF_SUBSCRIBE, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -94,7 +115,7 @@ export async function subscribeNotification(token, subscription) {
 }
 
 export async function unsubscribeNotification(token, { endpoint }) {
-  const res = await fetch(`${BASE_URL}/notifications/subscribe`, {
+  const res = await fetch(ENDPOINT.NOTIF_UNSUBSCRIBE, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
